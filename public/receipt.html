@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <title>Resit | Studio Noni Talam</title>
+    <style>
+        body { font-family: sans-serif; background: #f4f4f4; display: flex; justify-content: center; padding: 50px 20px; }
+        .receipt { background: white; padding: 40px; border-radius: 10px; width: 100%; max-width: 450px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); border-top: 10px solid #004d31; }
+        .receipt-no { background: #fff4cc; text-align: center; padding: 15px; margin: 25px 0; border-radius: 5px; font-weight: bold; color: #a67c00; font-size: 18px; }
+        .row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px dashed #ddd; }
+        .btn { display: block; width: 100%; text-align: center; background: #004d31; color: white; padding: 15px; text-decoration: none; border-radius: 5px; margin-top: 20px; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="receipt">
+        <h2 style="text-align:center; color:#004d31;">PEMBAYARAN BERJAYA</h2>
+        <div id="details"></div>
+        <div class="receipt-no" id="rcptNo"></div>
+        <a href="#" class="btn" onclick="window.print()">SIMPAN / CETAK RESIT</a>
+        <a href="index.html" style="display:block; text-align:center; margin-top:20px; color:#999; text-decoration:none;">Kembali ke Laman Utama</a>
+    </div>
+
+    <script>
+        const dayNames = {
+            'monday': 'Isnin',
+            'tuesday': 'Selasa',
+            'wednesday': 'Rabu',
+            'thursday': 'Khamis',
+            'friday': 'Jumaat',
+            'saturday': 'Sabtu'
+        };
+
+        const packageNames = {
+            'individual': 'Sesi Individu / Kecil',
+            'joyful-trio': 'Joyful Trio'
+        };
+
+        function formatTime(time) {
+            const [hour] = time.split(':');
+            const hourNum = parseInt(hour);
+            if (hourNum < 12) return `${hourNum}:00 PAGI`;
+            if (hourNum === 12) return `12:00 TENGAHARI`;
+            return `${hourNum - 12}:00 PETANG`;
+        }
+
+        const data = JSON.parse(sessionStorage.getItem('bookingData'));
+        if(!data) window.location.href = 'index.html';
+        const rNo = data.receiptNo || "NT-" + Math.floor(Math.random() * 900000 + 100000);
+        document.getElementById('details').innerHTML = `
+            <div class="row"><span>Nama:</span><strong>${data.name}</strong></div>
+            <div class="row"><span>Telefon:</span><strong>${data.phone}</strong></div>
+            <div class="row"><span>Pakej:</span><strong>${packageNames[data.package]}</strong></div>
+            <div class="row"><span>Sesi:</span><strong>${dayNames[data.day]}, ${formatTime(data.time)}</strong></div>
+            <div class="row" style="border-bottom:2px solid #004d31;"><span>Jumlah:</span><strong>RM ${data.price}</strong></div>
+        `;
+        document.getElementById('rcptNo').innerText = "NO. RESIT: " + rNo;
+    </script>
+</body>
+</html>
