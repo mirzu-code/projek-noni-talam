@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel Kawalan Noni Talam</title>
+    <style>
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background-color: #fffaf0; 
+            margin: 0; 
+            padding: 20px; 
+            color: #333;
+        }
+        .container { 
+            max-width: 1000px; 
+            margin: auto; 
+            text-align: center; 
+        }
+        h1 { color: #d63384; margin-bottom: 30px; }
+        
+        /* Gaya Kotak Tarikh */
+        .date-box { 
+            background: white; 
+            padding: 25px; 
+            border-radius: 20px; 
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05); 
+            margin-bottom: 40px; 
+            display: inline-block;
+            border: 1px solid #ffeeba;
+        }
+        label { font-weight: bold; font-size: 1.1em; color: #555; }
+        input[type="date"] { 
+            padding: 12px; 
+            border-radius: 10px; 
+            border: 2px solid #ffc107; 
+            font-size: 16px; 
+            margin-top: 10px;
+            outline: none;
+        }
+
+        /* Gaya Kotak Slot */
+        #slot-container { 
+            display: flex; 
+            flex-wrap: wrap; 
+            justify-content: center; 
+            gap: 20px; 
+        }
+        .slot-card { 
+            width: 260px; 
+            padding: 25px; 
+            border-radius: 20px; 
+            cursor: pointer; 
+            transition: all 0.3s ease; 
+            border: 3px solid transparent;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            background: white;
+        }
+        .slot-card:hover { transform: translateY(-5px); box-shadow: 0 8px 25px rgba(0,0,0,0.1); }
+        
+        .buka { border-color: #28a745; color: #28a745; background: #f1f8f5; }
+        .penuh { border-color: #dc3545; color: #dc3545; background: #fff5f5; }
+
+        .slot-card h3 { margin: 0; font-size: 1.2em; text-transform: uppercase; }
+        .slot-card h2 { margin: 15px 0; font-size: 3em; }
+        .slot-card hr { border: 0; border-top: 1px solid currentColor; opacity: 0.3; }
+        .slot-card strong { display: block; margin-top: 15px; font-size: 1.2em; letter-spacing: 1px; }
+
+        @media (max-width: 600px) {
+            .slot-card { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Panel Kawalan Staf Noni Talam 👩‍🍳</h1>
+        
+        <div class="date-box">
+            <label for="pilihTarikh">📅 PILIH TARIKH TUGASAN:</label><br>
+            <input type="date" id="pilihTarikh">
+        </div>
+
+        <div id="slot-container">
+            </div>
+    </div>
+
+   <script>
+    const inputTarikh = document.getElementById('pilihTarikh');
+    const slotContainer = document.getElementById('slot-container');
+
+    // 1. Set tarikh hari ini sebagai default bila mula-mula buka
+    const hariIni = new Date().toISOString().split('T')[0];
+    inputTarikh.value = hariIni;
+
+    // 2. Fungsi Utama untuk tarik data (Sync dengan Kalendar)
+    async function loadSlots() {
+        const tarikhPilihan = inputTarikh.value; // Ambil tarikh dari kalendar
+        console.log("Sedang tarik data untuk tarikh:", tarikhPilihan);
+
+        try {
+            // Kita tambah tarikhPilihan dalam URL supaya server tahu tarikh mana kita nak
+            const response = await fetch(`/api/slots?tarikh=${tarikhPilihan}`);
+            
+            if (!response.ok) throw new Error('Server tidak merespon');
+
+            const data = await response.json();
+            slotContainer.innerHTML = ''; // Kosongkan kotak lama
+
+            if (data.length === 0) {
+                slotContainer.innerHTML = `<p style="color:#888;">Tiada slot untuk ${tarikhPilihan}. Sila pilih tarikh lain.</p>`;
+                return;
+            }
+
+            data.forEach(slot => {
+                const card = document.createElement('div');
+                card.className = `slot-card ${slot.status.toLowerCase()}`;
+                
+                // Pastikan format masa cantik (10:00)
+                const masaPaparan = slot.masa ? slot.masa.substring(0, 5) : "??:??";
+
+                card.innerHTML = `
+                    <h3>${slot.hari}</h3>
+                    <h2>${masaPaparan}</h2>
+                    <hr>
+                    <strong>${slot.status}</strong>
+                `;
+                
+                // Bila klik kotak, dia akan update dan "refresh" balik tarikh yang sama
+                card.onclick = () => updateStatus(slot.id, slot.status);
+                slotContainer.appendChild(card);
+            });
+
+        } catch (err) {
+            console.error("Error:", err);
+            slotContainer.innerHTML = `<p style="color:red; font-weight:bold;">❌ Error: Failed to connect to database. Make sure server.js is running.</p>`;
+        }
+    }
+
+    // 3. Fungsi Kemaskini Status (BUKA/PENUH)
+    async function updateStatus(id, statusSemasa) {
+        try {
+            const response = await fetch('/api/update-slot', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id, status: statusSemasa })
+            });
+
+            if (response.ok) {
+                loadSlots(); // Refresh data untuk tarikh yang sedang dibuka
+            }
+        } catch (err) {
+            alert("Gagal kemaskini!");
+        }
+    }
+
+    // --- BAHAGIAN PALING PENTING UNTUK SYNC ---
+    // Setiap kali Ammar tukar tarikh kat kalendar, dia akan panggil loadSlots() semula
+    inputTarikh.addEventListener('change', () => {
+        console.log("Tarikh ditukar ke:", inputTarikh.value);
+        loadSlots();
+    });
+
+    // Jalankan sekali masa page mula-mula load
+    loadSlots();
+</script>
+</body>
+</html>

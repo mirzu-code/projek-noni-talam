@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pembayaran | Studio Noni Talam</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --studio-green: #004d31;
+            --logo-yellow: #ffcc00;
+            --soft-white: #f9f9f9;
+            --dark-text: #222;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        body {
+            background-color: var(--soft-white);
+            color: var(--dark-text);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 10%;
+            background: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .logo {
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: var(--studio-green);
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: var(--dark-text);
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: var(--studio-green);
+        }
+
+        .payment-container {
+            max-width: 900px;
+            margin: 50px auto;
+            padding: 0 20px;
+        }
+
+        .payment-header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .payment-header h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            color: var(--studio-green);
+            margin-bottom: 10px;
+        }
+
+        .payment-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: start;
+        }
+
+        .booking-summary {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+
+        .booking-summary h2 {
+            color: var(--studio-green);
+            font-size: 1.5rem;
+            margin-bottom: 25px;
+            border-bottom: 2px solid var(--logo-yellow);
+            padding-bottom: 15px;
+        }
+
+        .summary-item {
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .summary-item:last-child {
+            border-bottom: none;
+        }
+
+        .summary-label {
+            color: #666;
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .summary-value {
+            color: var(--dark-text);
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-top: 5px;
+        }
+
+        .price-total {
+            background: linear-gradient(135deg, var(--studio-green) 0%, rgba(0,77,49,0.8) 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 25px;
+            text-align: center;
+        }
+
+        .price-total .label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .price-total .amount {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--logo-yellow);
+            margin-top: 10px;
+        }
+
+        .payment-methods {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+
+        .payment-methods h2 {
+            color: var(--studio-green);
+            font-size: 1.5rem;
+            margin-bottom: 25px;
+        }
+
+        .payment-option {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            margin-bottom: 15px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: 0.3s ease;
+        }
+
+        .payment-option:hover {
+            border-color: var(--studio-green);
+            background: rgba(0,77,49,0.05);
+        }
+
+        .payment-option input[type="radio"] {
+            margin-right: 15px;
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        .payment-option-content {
+            flex: 1;
+        }
+
+        .payment-option-title {
+            font-weight: 700;
+            color: var(--dark-text);
+            margin-bottom: 5px;
+        }
+
+        .payment-option-desc {
+            font-size: 0.85rem;
+            color: #666;
+        }
+
+        .payment-button {
+            width: 100%;
+            padding: 15px;
+            background: var(--studio-green);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: 0.3s ease;
+            margin-top: 30px;
+        }
+
+        .payment-button:hover {
+            background: var(--logo-yellow);
+            color: var(--studio-green);
+        }
+
+        .back-button {
+            display: inline-block;
+            margin-bottom: 30px;
+            color: var(--studio-green);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .back-button:hover {
+            text-decoration: underline;
+        }
+
+        footer {
+            background: #111;
+            color: white;
+            padding: 40px 10%;
+            text-align: center;
+            margin-top: 60px;
+        }
+
+        @media (max-width: 768px) {
+            .payment-content {
+                grid-template-columns: 1fr;
+            }
+
+            .payment-header h1 {
+                font-size: 1.8rem;
+            }
+
+            .price-total .amount {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">STUDIO NONI TALAM</div>
+        <a href="index.html" class="nav-link">← Kembali</a>
+    </header>
+
+    <div class="payment-container">
+        <a href="index.html" class="back-button">← Kembali ke halaman utama</a>
+
+        <div class="payment-header">
+            <h1>Pembayaran</h1>
+            <p>Sila lengkapkan pembayaran untuk mengesahkan tempahan anda</p>
+        </div>
+
+        <div class="payment-content">
+            <!-- Booking Summary -->
+            <div class="booking-summary">
+                <h2>Ringkasan Tempahan</h2>
+                
+                <div class="summary-item">
+                    <div class="summary-label">Pakej</div>
+                    <div class="summary-value" id="summaryPackage">-</div>
+                </div>
+
+                <div class="summary-item">
+                    <div class="summary-label">Nama</div>
+                    <div class="summary-value" id="summaryName">-</div>
+                </div>
+
+                <div class="summary-item">
+                    <div class="summary-label">Email</div>
+                    <div class="summary-value" id="summaryEmail">-</div>
+                </div>
+
+                <div class="summary-item">
+                    <div class="summary-label">Telefon</div>
+                    <div class="summary-value" id="summaryPhone">-</div>
+                </div>
+
+                <div class="summary-item">
+                    <div class="summary-label">Hari</div>
+                    <div class="summary-value" id="summaryDay">-</div>
+                </div>
+
+                <div class="summary-item">
+                    <div class="summary-label">Masa</div>
+                    <div class="summary-value" id="summaryTime">-</div>
+                </div>
+
+                <div class="price-total">
+                    <div class="label">Jumlah Bayaran</div>
+                    <div class="amount" id="totalAmount">RM 150</div>
+                </div>
+            </div>
+
+            <!-- Payment Methods -->
+            <div class="payment-methods">
+                <h2>Kaedah Pembayaran</h2>
+
+                <label class="payment-option">
+                    <input type="radio" name="paymentMethod" value="bank-transfer" checked>
+                    <div class="payment-option-content">
+                        <div class="payment-option-title">✓ Pindahan Bank</div>
+                        <div class="payment-option-desc">Pindahan ke akaun studio kami</div>
+                    </div>
+                </label>
+
+                <label class="payment-option">
+                    <input type="radio" name="paymentMethod" value="online-banking">
+                    <div class="payment-option-content">
+                        <div class="payment-option-title">💳 Internet Banking</div>
+                        <div class="payment-option-desc">Klik pembayaran melalui bank anda</div>
+                    </div>
+                </label>
+
+                <label class="payment-option">
+                    <input type="radio" name="paymentMethod" value="e-wallet">
+                    <div class="payment-option-content">
+                        <div class="payment-option-title">📱 E-Wallet</div>
+                        <div class="payment-option-desc">Touch 'n Go, Boost, atau GCash</div>
+                    </div>
+                </label>
+
+                <label class="payment-option">
+                    <input type="radio" name="paymentMethod" value="whatsapp">
+                    <div class="payment-option-content">
+                        <div class="payment-option-title">💬 Hubungi WhatsApp</div>
+                        <div class="payment-option-desc">Hubungi kami untuk maklumat pembayaran</div>
+                    </div>
+                </label>
+
+                <button class="payment-button" onclick="processPayment()">Teruskan Pembayaran</button>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 Studio Noni Talam. All Rights Reserved.</p>
+        <p style="font-size: 0.8rem; margin-top: 15px; opacity: 0.5;">Aliff Avenue S, 02-09, Jalan Tampoi, Johor Bahru.</p>
+        <p style="font-size: 0.8rem; margin-top: 10px; opacity: 0.5;">Hubungi: +6019-7414444 | Email: info@studiononitalam.com</p>
+    </footer>
+
+    <script>
+        const dayNames = {
+            'monday': 'Isnin',
+            'tuesday': 'Selasa',
+            'wednesday': 'Rabu',
+            'thursday': 'Khamis',
+            'friday': 'Jumaat',
+            'saturday': 'Sabtu'
+        };
+
+        const packageNames = {
+            'individual': 'Sesi Individu / Kecil',
+            'joyful-trio': 'Joyful Trio'
+        };
+
+        const packagePrices = {
+            'individual': 90,
+            'joyful-trio': 150
+        };
+
+        function formatTime(time) {
+            const [hour] = time.split(':');
+            const hourNum = parseInt(hour);
+            if (hourNum < 12) return `${hourNum}:00 PAGI`;
+            if (hourNum === 12) return `12:00 TENGAHARI`;
+            return `${hourNum - 12}:00 PETANG`;
+        }
+
+        function loadBookingData() {
+            const bookingData = JSON.parse(sessionStorage.getItem('bookingData'));
+            
+            if (!bookingData) {
+                alert('Tiada data tempahan. Sila mulakan tempahan baru.');
+                window.location.href = 'index.html';
+                return;
+            }
+
+            document.getElementById('summaryPackage').textContent = packageNames[bookingData.package] || '-';
+            document.getElementById('summaryName').textContent = bookingData.name;
+            document.getElementById('summaryEmail').textContent = bookingData.email;
+            document.getElementById('summaryPhone').textContent = bookingData.phone;
+            document.getElementById('summaryDay').textContent = dayNames[bookingData.day] || '-';
+            document.getElementById('summaryTime').textContent = formatTime(bookingData.time);
+            document.getElementById('totalAmount').textContent = `RM ${packagePrices[bookingData.package]}`;
+        }
+
+        function processPayment() {
+            const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked').value;
+            const bookingData = JSON.parse(sessionStorage.getItem('bookingData'));
+
+            // Save booking to database
+            fetch('/api/save-booking', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    ...bookingData,
+                    paymentMethod: paymentMethod
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Update bookingData with receiptNo
+                    bookingData.receiptNo = data.receiptNo;
+                    sessionStorage.setItem('bookingData', JSON.stringify(bookingData));
+
+                    if (paymentMethod === 'whatsapp') {
+                        const message = `Saya ingin membuat pembayaran untuk tempahan:\n\nPakej: ${packageNames[bookingData.package]}\nNama: ${bookingData.name}\nTelefon: ${bookingData.phone}\nHari: ${dayNames[bookingData.day]}\nMasa: ${formatTime(bookingData.time)}\n\nJumlah: RM ${packagePrices[bookingData.package]}\nNo. Resit: ${data.receiptNo}`;
+                        window.location.href = `https://wa.me/60197414444?text=${encodeURIComponent(message)}`;
+                    } else {
+                        alert(`Pembayaran melalui ${paymentMethod === 'bank-transfer' ? 'Pindahan Bank' : paymentMethod === 'online-banking' ? 'Internet Banking' : 'E-Wallet'} telah dipilih.\n\nSila lengkapkan pembayaran dan resit akan dijana.`);
+                        // Redirect to receipt page
+                        window.location.href = 'receipt.html';
+                    }
+                } else {
+                    alert('Gagal menyimpan tempahan. Sila cuba lagi.');
+                }
+            })
+            .catch(err => {
+                console.error('Error saving booking:', err);
+                alert('Ralat teknikal. Sila cuba lagi.');
+            });
+        }
+
+        // Load booking data when page loads
+        window.addEventListener('load', loadBookingData);
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,6 @@
+# Allow all crawlers to index the site
+User-agent: *
+Allow: /
+
+# Replace the example domain below with your real Vercel site URL
+Sitemap: https://your-vercel-domain.vercel.app/sitemap.xml

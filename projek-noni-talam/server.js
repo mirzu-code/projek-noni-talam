@@ -25,23 +25,23 @@ app.get('/api/slots', async (req, res) => {
     }
 });
 
-// 3. API untuk "Tap" (Tukar status buka/penuh)
-app.post('/api/toggle-slot/:id', async (req, res) => {
-    const { id } = req.params;
+app.post('/api/save-booking', async (req, res) => {
+    const { name, email, phone, package, date, time, paymentMethod } = req.body;
+    const receiptNo = 'STN-' + Date.now(); // Jana no resit ringkas
+
     try {
-        // Semak status semasa dahulu
-        const checkResult = await pool.query('SELECT status FROM slots WHERE id = $1', [id]);
-        if (checkResult.rows.length === 0) return res.status(404).send('Slot tidak wujud');
-
-        const currentStatus = checkResult.rows[0].status;
-        const newStatus = currentStatus === 'buka' ? 'penuh' : 'buka';
-
-        // Update status baru dalam database
-        await pool.query('UPDATE slots SET status = $1 WHERE id = $2', [newStatus, id]);
+        const query = `
+            INSERT INTO bookings (name, email, phone, package, booking_date, booking_time, payment_method, receipt_no)
+            VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+            RETURNING *`;
         
-        res.json({ message: 'Status berjaya ditukar!', newStatus });
+        const values = [name, email, phone, package, date, time, paymentMethod, receiptNo];
+        await pool.query(query, values);
+
+        res.json({ success: true, receiptNo: receiptNo });
     } catch (err) {
-        res.status(500).send(err.message);
+        console.error(err);
+        res.status(500).send(err.message); // Ini yang hantar teks "relation..." tadi
     }
 });
 
